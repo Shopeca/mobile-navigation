@@ -29,9 +29,11 @@
 	sectionButtons: [],
 	sectionNames: [],
 	activeSection: null,
+	body: null,
 	init: function () {
 		if (this.inited === false) {
 			var $this = this;
+			this.body = $('body');
 			this.inited = true;
 			this.initElements();
 			this.button
@@ -54,15 +56,13 @@
 			this.heading.html(this.settings.heading);
 		}
 
-		var $body = $('body');
-
 		this.button
 			.hide()
-			.appendTo($body);
+			.appendTo(this.body);
 
 		this.wrapper
 			.hide()
-			.appendTo($body);
+			.appendTo(this.body);
 	},
 	initContent: function () {
 		if (this.initedContent === false) {
@@ -134,6 +134,7 @@
 	open: function () {
 		this.initContent();
 		this.active = true;
+		this.body.css('overflow', 'hidden');
 		this.wrapper.show();
 		this.panel
 			.css('left', this.wrapper.width()+'px')
@@ -142,6 +143,7 @@
 	},
 	close: function (quickClose) {
 		this.active = false;
+		this.body.css('overflow', 'auto');
 		if (quickClose === true) {
 			this.wrapper.hide();
 		} else {
