@@ -23,12 +23,17 @@
 		]);
 		$(document).on('ready', function(){
 			Shopeca.MobileNavigation.configure({
-				'breakpoint': 'mobile',
-				'jRes': jRes,
-				'heading': 'Menu'
+				breakpoint: 'mobile',
+				jRes: jRes,
+				heading: 'Menu',
+				templates: {
+					button: '<button class="mobile-navigation-button hamburger hamburger--squeeze" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button>'
+				}
 			});
 			Shopeca.MobileNavigation.addSection($('nav.nav1'), 'Hlavní');
 			Shopeca.MobileNavigation.addSection($('nav.nav2'), 'Sekundarni');
+			Shopeca.MobileNavigation.addSection($('nav.nav3'), 'Tercialni');
+			Shopeca.MobileNavigation.addSection($('div.nav4'), 'Info');
 		});
 	</script>
 	<link href="src/hamburgers.css" rel="stylesheet">
@@ -80,6 +85,7 @@
 			overflow-y: scroll;
 			overflow-x: hidden;
 			height: calc(100% - 100px);
+			color: #fff;
 		}
 		.mobile-navigation-section a {
 			color: #fff;
@@ -93,6 +99,9 @@
 		}
 		.mobile-navigation-section a:hover {
 			background: #000;
+		}
+		.mobile-navigation-section p, .mobile-navigation-section h3 {
+			padding: 20px 20px 0 20px;
 		}
 		.mobile-navigation-section-buttons {
 			width: 100%;
@@ -115,6 +124,7 @@
 			line-height: 40px;
 			padding: 0 15px;
 			cursor: pointer;
+			outline: 0;
 		}
 		.mobile-navigation-section-buttons button:hover {
 			background: #000;
@@ -146,5 +156,13 @@
 		<a href="">Auta</a>
 		<a href="">Drogerie</a>
 	</nav>
+	<nav class="nav3">
+		<a href="">Jeste neco</a>
+		<a href="">Haleluja</a>
+	</nav>
+	<div class="nav4">
+		<h3>Info</h3>
+		<p>Lorem ipsum neco neco</p>
+	</div>
 </body>
 </html>
