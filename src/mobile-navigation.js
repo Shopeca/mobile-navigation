@@ -78,6 +78,8 @@
 						.appendTo(this.panel);
 					this.sectionPanels.push(panel);
 
+					this.sections[i].trigger('mobileNavigationInited', {panel: panel});
+
 					var button = $(this.settings.templates.sectionButton);
 					button
 						.data('index', i)
