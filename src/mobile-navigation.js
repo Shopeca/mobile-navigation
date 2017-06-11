@@ -39,7 +39,6 @@
 			this.button
 				.on('click', function(e){
 					e.preventDefault();
-					$(this).toggleClass($this.settings.classNames.buttonActive);
 					$this.toggle();
 				})
 		}
@@ -136,6 +135,7 @@
 	open: function () {
 		this.initContent();
 		this.active = true;
+		this.button.addClass(this.settings.classNames.buttonActive);
 		this.body.css('overflow', 'hidden');
 		this.wrapper.show();
 		this.panel
@@ -145,6 +145,7 @@
 	},
 	close: function (quickClose) {
 		this.active = false;
+		this.button.removeClass(this.settings.classNames.buttonActive);
 		this.body.css('overflow', 'auto');
 		if (quickClose === true) {
 			this.wrapper.hide();
