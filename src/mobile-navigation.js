@@ -1,4 +1,4 @@
-/*! Shopeca MobileNavigation (0.0.1). (C) 2017 Tom Hnatovsky, Shopeca.com. BSD-3-Clause @license: https://opensource.org/licenses/BSD-3-Clause */
+/*! Shopeca MobileNavigation (0.0.2). (C) 2017 Tom Hnatovsky, Shopeca.com. BSD-3-Clause @license: https://opensource.org/licenses/BSD-3-Clause */
 
 ;var Shopeca = Shopeca || {}; Shopeca.MobileNavigation = {
 	settings: {
@@ -28,6 +28,7 @@
 	sectionPanels: [],
 	sectionButtons: [],
 	sectionNames: [],
+	sectionInits: [],
 	activeSection: null,
 	body: null,
 	init: function () {
@@ -109,9 +110,10 @@
 			});
 		}
 	},
-	addSection: function ($section, name) {
+	addSection: function ($section, name, initCallback) {
 		this.sections.push($section);
 		this.sectionNames.push(name);
+		this.sectionInits.push(initCallback || null);
 	},
 	show: function () {
 		this.init();
@@ -162,7 +164,14 @@
 			for (var i = 0; i < this.sectionButtons.length; i++) {
 				if (i == index) {
 					this.activeSection = i;
-					this.sectionPanels[i].addClass(this.settings.classNames.sectionActive);
+					let panel = this.sectionPanels[i];
+					panel.addClass(this.settings.classNames.sectionActive);
+					if (panel.data('initialized') != true) {
+						panel.data('initialized', true);
+						if (typeof this.sectionInits[i] == 'function') {
+							this.sectionInits[i](panel);
+						}
+					}
 					this.sectionButtons[i].addClass(this.settings.classNames.sectionButtonActive);
 				} else {
 					this.sectionPanels[i].removeClass(this.settings.classNames.sectionActive);
