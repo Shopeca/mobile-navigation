@@ -30,10 +30,14 @@
 					button: '<button class="mobile-navigation-button hamburger hamburger--squeeze" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button>'
 				}
 			});
-			Shopeca.MobileNavigation.addSection($('nav.nav1'), 'Hlavní');
-			Shopeca.MobileNavigation.addSection($('nav.nav2'), 'Sekundarni');
-			Shopeca.MobileNavigation.addSection($('nav.nav3'), 'Tercialni');
-			Shopeca.MobileNavigation.addSection($('div.nav4'), 'Info');
+			Shopeca.MobileNavigation.addSection('main', {element: $('nav.nav1'), name: 'Hlavní'});
+			Shopeca.MobileNavigation.addSection('secondary', {element: $('nav.nav2'), name: 'Sekundarni'});
+			Shopeca.MobileNavigation.addSection('tertiary', {element: $('nav.nav3'), name: 'Tercialni', initialize: function (panel) {
+				setTimeout(function() {
+					$('a', panel).eq(1).css('backgroundColor', 'red');
+				}, 2000);
+			}});
+			Shopeca.MobileNavigation.addSection('info', {element: $('div.nav4'), name: 'Info'});
 		});
 	</script>
 	<link href="src/hamburgers.css" rel="stylesheet">

@@ -1,4 +1,4 @@
-/*! Shopeca MobileNavigation (0.0.2). (C) 2017 Tom Hnatovsky, Shopeca.com. BSD-3-Clause @license: https://opensource.org/licenses/BSD-3-Clause */
+/*! Shopeca MobileNavigation (0.1.0). (C) 2020 Tom Hnatovsky, Shopeca.com. BSD-3-Clause @license: https://opensource.org/licenses/BSD-3-Clause */
 
 ;var Shopeca = Shopeca || {}; Shopeca.MobileNavigation = {
 	settings: {
@@ -24,11 +24,7 @@
 	panel: null,
 	wrapper: null,
 	heading: null,
-	sections: [],
-	sectionPanels: [],
-	sectionButtons: [],
-	sectionNames: [],
-	sectionInits: [],
+	sections: {},
 	activeSection: null,
 	body: null,
 	init: function () {
@@ -68,31 +64,31 @@
 		if (this.initedContent === false) {
 			this.initedContent = true;
 
-			if (this.sections.length > 0) {
+			var sectionKeys = Object.keys(this.sections);
+			if (sectionKeys.length > 0) {
 				var $this = this;
 				var line = $(this.settings.templates.sectionButtonLine);
-				for (var i = 0; i < this.sections.length; i++) {
+				for (var i = 0; i < sectionKeys.length; i++) {
+					var settings = this.sections[sectionKeys[i]];
 					var panel = $(this.settings.templates.sectionPanel);
 					panel
-						.html(this.sections[i].clone())
+						.html(settings.element.clone())
 						.appendTo(this.panel);
-					this.sectionPanels.push(panel);
-
-					this.sections[i].trigger('mobileNavigationInited', {panel: panel});
+					this.sections[sectionKeys[i]].panel = panel;
 
 					var button = $(this.settings.templates.sectionButton);
 					button
-						.data('index', i)
+						.data('index', sectionKeys[i])
 						.appendTo(line)
-						.text(this.sectionNames[i])
+						.text(settings.name)
 						.on('click', function(e){
 							e.preventDefault();
 							$this.switchSection($(this).data('index'));
 						});
-					this.sectionButtons.push(button);
+					this.sections[sectionKeys[i]].button = button;
 				}
 				line.appendTo(this.panel);
-				$this.switchSection(0);
+				$this.switchSection(sectionKeys[0]);
 			}
 		}
 	},
@@ -110,10 +106,17 @@
 			});
 		}
 	},
-	addSection: function ($section, name, initCallback) {
-		this.sections.push($section);
-		this.sectionNames.push(name);
-		this.sectionInits.push(initCallback || null);
+	addSection: function (key, section) {
+		if (typeof section.element == 'undefined') {
+			console.error('You have to define element for your mobile navigation section');
+			return;
+		}
+		if (typeof section.name == 'undefined') {
+			console.error('You have to define name for your mobile navigation section');
+			return;
+		}
+
+		this.sections[key] = section;
 	},
 	show: function () {
 		this.init();
@@ -159,23 +162,35 @@
 			});
 		}
 	},
+	getSection: function (index) {
+		if (typeof this.sections[index] !== 'undefined') {
+			return this.sections[index];
+		}
+		return null;
+	},
 	switchSection: function (index) {
-		if (typeof this.sectionButtons[index] !== 'undefined' && index !== this.activeSection) {
-			for (var i = 0; i < this.sectionButtons.length; i++) {
-				if (i == index) {
-					this.activeSection = i;
-					let panel = this.sectionPanels[i];
-					panel.addClass(this.settings.classNames.sectionActive);
-					if (panel.data('initialized') != true) {
-						panel.data('initialized', true);
-						if (typeof this.sectionInits[i] == 'function') {
-							this.sectionInits[i](panel);
+		var section = this.getSection(index);
+		if (section !== null && index !== this.activeSection) {
+			var sectionKeys = Object.keys(this.sections);
+			if (sectionKeys.length > 0) {
+				for (var i = 0; i < sectionKeys.length; i++) {
+					var key = sectionKeys[i];
+					var panel = this.sections[key].panel;
+					var button = this.sections[key].button;
+					if (index == key) {
+						this.activeSection = key;
+						panel.addClass(this.settings.classNames.sectionActive);
+						if (panel.data('initialized') != true) {
+							panel.data('initialized', true);
+							if (typeof this.sections[key].initialize == 'function') {
+								this.sections[key].initialize(panel);
+							}
 						}
+						button.addClass(this.settings.classNames.sectionButtonActive);
+					} else {
+						panel.removeClass(this.settings.classNames.sectionActive);
+						button.removeClass(this.settings.classNames.sectionButtonActive);
 					}
-					this.sectionButtons[i].addClass(this.settings.classNames.sectionButtonActive);
-				} else {
-					this.sectionPanels[i].removeClass(this.settings.classNames.sectionActive);
-					this.sectionButtons[i].removeClass(this.settings.classNames.sectionButtonActive);
 				}
 			}
 		}
