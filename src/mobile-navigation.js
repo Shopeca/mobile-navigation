@@ -74,6 +74,9 @@
 					panel
 						.html(settings.element.clone())
 						.appendTo(this.panel);
+					if (typeof settings.heading == 'string') {
+						panel.prepend($(settings.heading));
+					}
 					this.sections[sectionKeys[i]].panel = panel;
 
 					var button = $(this.settings.templates.sectionButton);

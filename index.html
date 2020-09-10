@@ -31,7 +31,7 @@
 				}
 			});
 			Shopeca.MobileNavigation.addSection('main', {element: $('nav.nav1'), name: 'Hlavní'});
-			Shopeca.MobileNavigation.addSection('secondary', {element: $('nav.nav2'), name: 'Sekundarni'});
+			Shopeca.MobileNavigation.addSection('secondary', {element: $('nav.nav2'), name: 'Sekundarni', heading: '<h3>Sekundární menu</h3>'});
 			Shopeca.MobileNavigation.addSection('tertiary', {element: $('nav.nav3'), name: 'Tercialni', initialize: function (panel) {
 				setTimeout(function() {
 					$('a', panel).eq(1).css('backgroundColor', 'red');
